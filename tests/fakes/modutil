@@ -1,0 +1,18 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Fake NSS modutil (see common.sh): "-add NAME -libfile FILE" succeeds when
+# FILE exists; $CSC_MODUTIL_FAIL=1 makes it fail.
+. "$CSC_FAKES/common.sh"
+
+lib=''
+while [ $# -gt 0 ]; do
+	case $1 in
+	-libfile) lib=$2; shift ;;
+	esac
+	shift
+done
+if [ -n "${CSC_MODUTIL_FAIL:-}" ] || [ ! -f "$lib" ]; then
+	echo "modutil: ERROR: Failed to add module \"Builtin Roots\". Probable cause : \"Failure to load dynamic library.\"." >&2
+	exit 1
+fi
+echo 'Module "Builtin Roots" added to database.'

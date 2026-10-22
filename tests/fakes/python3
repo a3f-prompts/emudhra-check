@@ -1,0 +1,12 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Fake python3 (see common.sh): the real python3, but it imports only from
+# $CSC_PYTHONPATH (the test's fake certifi, pip and grpc packages) and the
+# standard library: -S skips the site-packages of this host.  So the
+# binary's discovery code runs for real against known packages.
+. "$CSC_FAKES/common.sh"
+
+py=$(command -v python3) || { echo "fake python3: no python3 installed" >&2; exit 127; }
+PYTHONPATH=$CSC_PYTHONPATH
+export PYTHONPATH
+exec "$py" -S "$@"

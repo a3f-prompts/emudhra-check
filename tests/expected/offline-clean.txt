@@ -1,0 +1,7 @@
+Checking trust in: "emSign ECC Root CA - G3" [emSign-G3], "AAA Certificate Services" [Comodo-AAA]
+== offline: searching @ROOT@ with @SEARCHER@ (a whole system takes minutes) ==
+[PATCHED]    offline search of @ROOT@ (@SEARCHER@) | emSign-G3 | no trusted copy found
+[PATCHED]    offline search of @ROOT@ (@SEARCHER@) | Comodo-AAA | no trusted copy found
+
+Summary: 0 VULNERABLE, 0 UNKNOWN, 2 PATCHED, 0 SKIPPED
+rc=0

@@ -1,0 +1,53 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Fake "openssl s_client" (see common.sh).  Trust store: the -CAfile file,
+# plus the default CA path unless -no-CApath; without -CAfile the default
+# store.  Accepted: exit 0; rejected: "verify error:num=20" and exit 1, as
+# the real one with -verify_return_error.  A -CAfile named expired-* gives
+# verify error 10 (certificate has expired), reset-* a connection reset
+# without verify error; a port other than 443 is refused.
+. "$CSC_FAKES/common.sh"
+
+if [ "${1:-}" != s_client ]; then
+	echo "fake openssl: only s_client is implemented" >&2
+	exit 1
+fi
+cafile='' nocapath='' host='' port=''
+while [ $# -gt 0 ]; do
+	case $1 in
+	-connect) host=${2%:*} port=${2##*:}; shift ;;
+	-CAfile) cafile=$2; shift ;;
+	-no-CApath) nocapath=1 ;;
+	esac
+	shift
+done
+root=$(root_of "$host")
+if [ -z "$root" ]; then
+	echo "BIO_lookup_ex: system lib: Name or service not known" >&2
+	exit 1
+fi
+if [ "$port" != 443 ]; then
+	echo "BIO_connect: connect error:Connection refused" >&2
+	echo "connect:errno=111" >&2
+	exit 1
+fi
+echo "CONNECTED(00000003)"
+case ${cafile##*/} in
+expired-*)
+	echo "depth=0 CN=$host" >&2
+	echo "verify error:num=10:certificate has expired" >&2
+	echo "40F7A1D3B87F0000:error:0A000086:SSL routines:tls_post_process_server_certificate:certificate verify failed" >&2
+	exit 1 ;;
+reset-*)
+	echo "40C7B1E1D07F0000:error:0A000126:SSL routines::unexpected eof while reading" >&2
+	exit 1 ;;
+esac
+if { [ -n "$cafile" ] && file_trusts "$cafile" "$root"; } ||
+   { { [ -z "$cafile" ] || [ -z "$nocapath" ]; } && in_list "$root" "${CSC_DEFAULT_TRUST:-}"; }; then
+	echo "Verify return code: 0 (ok)"
+	exit 0
+fi
+echo "depth=1 C=IN, O=eMudhra Technologies Limited" >&2
+echo "verify error:num=20:unable to get local issuer certificate" >&2
+echo "40F7A1D3B87F0000:error:0A000086:SSL routines:tls_post_process_server_certificate:certificate verify failed" >&2
+exit 1

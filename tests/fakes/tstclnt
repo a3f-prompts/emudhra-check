@@ -1,0 +1,47 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Fake NSS tstclnt (see common.sh).  Trust: the db given with "-d sql:DIR"
+# (DIR/trusted.pem, written by the fake "certutil -A"; ignored with -D) and,
+# with -b, the builtins ($CSC_BUILTINS_TRUST).  Accepted: exit 0; rejected:
+# SEC_ERROR_UNKNOWN_ISSUER and exit 1.  $CSC_TSTCLNT: hang (never answers),
+# close (closes stdout/stderr first, then never answers), reset (runs with
+# -b fail with a connection reset, no verdict on the chain).
+. "$CSC_FAKES/common.sh"
+
+case ${CSC_TSTCLNT:-good} in
+hang) hang ;;
+close) exec > /dev/null 2>&1; hang ;;
+esac
+
+host='' port='' db='' nodb='' builtins=''
+while [ $# -gt 0 ]; do
+	case $1 in
+	-h) host=$2; shift ;;
+	-p) port=$2; shift ;;
+	-d) db=${2#sql:}; shift ;;
+	-D) nodb=1 ;;
+	-b) builtins=1 ;;
+	esac
+	shift
+done
+root=$(root_of "$host")
+if [ -z "$root" ]; then
+	echo "tstclnt: unable to resolve $host: PR_DIRECTORY_LOOKUP_ERROR" >&2
+	exit 1
+fi
+if [ "$port" != 443 ]; then
+	echo "tstclnt: connect: PR_CONNECT_REFUSED_ERROR: Connection refused." >&2
+	exit 1
+fi
+if [ -n "$builtins" ] && [ "${CSC_TSTCLNT:-}" = reset ]; then
+	echo "tstclnt: read from socket failed: PR_CONNECT_RESET_ERROR: TCP connection reset by peer" >&2
+	exit 1
+fi
+if [ -n "$db" ] && [ -z "$nodb" ] && file_trusts "$db/trusted.pem" "$root"; then
+	exit 0
+fi
+if [ -n "$builtins" ] && in_list "$root" "${CSC_BUILTINS_TRUST:-}"; then
+	exit 0
+fi
+echo "tstclnt: SSL_ForceHandshake: SEC_ERROR_UNKNOWN_ISSUER: Peer's Certificate issuer is not recognized." >&2
+exit 1

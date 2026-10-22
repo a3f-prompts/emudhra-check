@@ -1,0 +1,66 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Fake curl (see common.sh).  Trust store: the --cacert file, plus the default
+# CA path unless "--capath /dev/null"; without --cacert the default store.
+# ~/.curlrc is read unless -q is the first argument; "insecure" there, like
+# -k/--insecure, makes every chain pass, as with the real curl.  Exit 0 =
+# chain accepted, 60 = verification failed, 28 = port other than 443; a
+# --cacert file named err77-* gives exit 77 (cannot load it), reset-* exit
+# 56 (connection reset).  $CSC_CURL selects a broken variant: accept
+# (accepts everything), broken (exit 1), hang (never answers).
+. "$CSC_FAKES/common.sh"
+
+case ${CSC_CURL:-good} in
+accept) exit 0 ;;
+broken) echo 'curl: (1) Protocol "https" not supported or disabled in libcurl' >&2; exit 1 ;;
+hang) hang ;;
+esac
+
+insecure=''
+if [ "${1:-}" != -q ] && grep -qx insecure "$HOME/.curlrc" 2>/dev/null; then
+	insecure=1
+fi
+cacert='' capath='' url=''
+while [ $# -gt 0 ]; do
+	case $1 in
+	--cacert) cacert=$2; shift ;;
+	--capath) capath=$2; shift ;;
+	--max-time | -m | -o | --output) shift ;;
+	-k | --insecure | -[!-]*k*) insecure=1 ;;
+	https://*) url=$1 ;;
+	esac
+	shift
+done
+hostport=${url#https://}
+hostport=${hostport%%/*}
+host=${hostport%%:*}
+port=443
+case $hostport in *:*) port=${hostport#*:} ;; esac
+root=$(root_of "$host")
+if [ -z "$root" ]; then
+	echo "curl: (6) Could not resolve host: $host" >&2
+	exit 6
+fi
+if [ "$port" != 443 ]; then
+	echo "curl: (28) Failed to connect to $host port $port after 2002 ms: Timeout was reached" >&2
+	exit 28
+fi
+case ${cacert##*/} in
+err77-*)
+	echo "curl: (77) error setting certificate file: $cacert" >&2
+	exit 77 ;;
+reset-*)
+	echo 'curl: (56) Recv failure: Connection reset by peer' >&2
+	exit 56 ;;
+esac
+if [ -n "$insecure" ]; then
+	exit 0
+fi
+if [ -n "$cacert" ] && file_trusts "$cacert" "$root"; then
+	exit 0
+fi
+if { [ -z "$cacert" ] || [ "$capath" != /dev/null ]; } && in_list "$root" "${CSC_DEFAULT_TRUST:-}"; then
+	exit 0
+fi
+echo 'curl: (60) SSL certificate problem: unable to get local issuer certificate' >&2
+exit 60

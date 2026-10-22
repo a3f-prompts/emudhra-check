@@ -1,0 +1,65 @@
+Checking trust in: "emSign ECC Root CA - G3" [emSign-G3], "AAA Certificate Services" [Comodo-AAA]
+== offline: searching @ROOT@ with @SEARCHER@ (a whole system takes minutes) ==
+[SKIPPED]    @ROOT@/etc/pki/ca-trust/source/anchors/g3.pem | emSign-G3 | PEM copy; CA source file, trusted only via a bundle built from it
+[PATCHED]    @ROOT@/etc/pki/ca-trust/source/blacklist/aaa.pem | Comodo-AAA | PEM copy; distrust (blacklist) entry
+[PATCHED]    @ROOT@/etc/pki/ca-trust/source/blocklist/g3.pem | emSign-G3 | PEM copy; distrust (blocklist) entry
+[VULNERABLE] @ROOT@/etc/ssl/certs/ca-certificates.crt | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[VULNERABLE] @ROOT@/etc/ssl/certs/ca-certificates.crt | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[PATCHED]    @ROOT@/etc/ssl/trusted-reject.pem | emSign-G3 | OpenSSL TRUSTED CERTIFICATE entry for emSign ECC Root CA - G3 excludes TLS server auth
+[UNKNOWN]    @ROOT@/home/u/.mozilla/firefox/p/cert9.db | emSign-G3 | DER copy; NSS db, may distrust it (certutil -L -d sql:DIR)
+[UNKNOWN]    @ROOT@/home/u/.pki/nssdb/cert8.db | Comodo-AAA | DER copy; NSS db, may distrust it (certutil -L -d DIR)
+[VULNERABLE] @ROOT@/opt/app/-dash.pem | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[VULNERABLE] @ROOT@/opt/app/anchor-aaa.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/app/bundle-nocomment.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/app/crlf.pem | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[PATCHED]    @ROOT@/opt/app/email-only-aaa.pem | Comodo-AAA | OpenSSL TRUSTED CERTIFICATE entry for AAA Certificate Services excludes TLS server auth
+[VULNERABLE] @ROOT@/opt/app/g3.der | emSign-G3 | DER copy of emSign ECC Root CA - G3 embedded
+[VULNERABLE] @ROOT@/opt/app/label-only.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/app/new?line.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/app/nocomment.pem | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[PATCHED]    @ROOT@/opt/app/reject-aaa.pem | Comodo-AAA | OpenSSL TRUSTED CERTIFICATE entry for AAA Certificate Services excludes TLS server auth
+[PATCHED]    @ROOT@/opt/app/reject-any-g3.pem | emSign-G3 | OpenSSL TRUSTED CERTIFICATE entry for emSign ECC Root CA - G3 excludes TLS server auth
+[VULNERABLE] @ROOT@/opt/app/roots.json | Comodo-AAA | PEM copy of AAA Certificate Services embedded (escaped, e.g. source code or JSON)
+[VULNERABLE] @ROOT@/opt/app/trust-any-aaa.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/app/trusted-g3.pem | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[VULNERABLE] @ROOT@/opt/app/we?ird.pem | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[VULNERABLE] @ROOT@/opt/app/with space.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/app/wrap76.pem | Comodo-AAA | PEM bundle trusts AAA Certificate Services
+[VULNERABLE] @ROOT@/opt/bom/fe-ff.bin | Comodo-AAA | DER copy of AAA Certificate Services embedded
+[VULNERABLE] @ROOT@/opt/bom/ff-fe.bin | emSign-G3 | DER copy of emSign ECC Root CA - G3 embedded
+[VULNERABLE] @ROOT@/opt/bom/utf8bom.bin | emSign-G3 | DER copy of emSign ECC Root CA - G3 embedded
+[VULNERABLE] @ROOT@/opt/ign/aaa.der | Comodo-AAA | DER copy of AAA Certificate Services embedded
+[VULNERABLE] @ROOT@/opt/ign/g3.pem | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[VULNERABLE] @ROOT@/src/roots.c | emSign-G3 | PEM copy of emSign ECC Root CA - G3 embedded (escaped, e.g. source code or JSON)
+[VULNERABLE] @ROOT@/usr/bin/app | Comodo-AAA | DER copy of AAA Certificate Services embedded
+[UNKNOWN]    @ROOT@/usr/lib/x86_64-linux-gnu/libnssckbi.so | emSign-G3 | DER copy; NSS builtins, keeps distrusted roots (see NSS probes)
+[UNKNOWN]    @ROOT@/usr/lib/x86_64-linux-gnu/libnssckbi.so | Comodo-AAA | DER copy; NSS builtins, keeps distrusted roots (see NSS probes)
+[SKIPPED]    @ROOT@/usr/share/ca-certificates/mozilla/Comodo_AAA_Services_root.crt | Comodo-AAA | PEM copy; CA source file, trusted only via a bundle built from it
+[SKIPPED]    @ROOT@/usr/share/pki/ca-trust-source/anchors/emSign.pem | emSign-G3 | PEM copy; CA source file, trusted only via a bundle built from it
+
+Summary: 23 VULNERABLE, 4 UNKNOWN, 6 PATCHED, 3 SKIPPED
+Not patched (still trusting a compromised root):
+  @ROOT@/etc/ssl/certs/ca-certificates.crt
+  @ROOT@/opt/app/-dash.pem
+  @ROOT@/opt/app/anchor-aaa.pem
+  @ROOT@/opt/app/bundle-nocomment.pem
+  @ROOT@/opt/app/crlf.pem
+  @ROOT@/opt/app/g3.der
+  @ROOT@/opt/app/label-only.pem
+  @ROOT@/opt/app/new?line.pem
+  @ROOT@/opt/app/nocomment.pem
+  @ROOT@/opt/app/roots.json
+  @ROOT@/opt/app/trust-any-aaa.pem
+  @ROOT@/opt/app/trusted-g3.pem
+  @ROOT@/opt/app/we?ird.pem
+  @ROOT@/opt/app/with space.pem
+  @ROOT@/opt/app/wrap76.pem
+  @ROOT@/opt/bom/fe-ff.bin
+  @ROOT@/opt/bom/ff-fe.bin
+  @ROOT@/opt/bom/utf8bom.bin
+  @ROOT@/opt/ign/aaa.der
+  @ROOT@/opt/ign/g3.pem
+  @ROOT@/src/roots.c
+  @ROOT@/usr/bin/app
+UNKNOWN checks could not be decided; rerun with -v for commands and messages.
+rc=1

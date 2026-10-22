@@ -1,0 +1,128 @@
+# SPDX-License-Identifier: MIT
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu:
+    name: ${{ matrix.cc }} (Ubuntu)
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build clang ripgrep busybox openssl curl
+      # The online-mode tests hide the runner's CA stores in a user namespace;
+      # Ubuntu's AppArmor forbids unprivileged ones by default.
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - name: Build
+        env:
+          CC: ${{ matrix.cc }}
+        run: |
+          meson setup build -Dwerror=true
+          meson compile -C build
+      - name: Test
+        run: meson test -C build --print-errorlogs
+      - name: Test against the live endpoints
+        if: matrix.cc == 'gcc'
+        run: meson test -C build --setup online --suite online --print-errorlogs
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: testlog-ubuntu-${{ matrix.cc }}
+          path: build/meson-logs/
+
+  musl-static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build musl-tools ripgrep busybox openssl curl
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - name: Build
+        env:
+          CC: musl-gcc
+        run: |
+          meson setup build -Dwerror=true -Dc_link_args=-static
+          meson compile -C build
+          file build/certstore-check
+      - name: Test
+        run: meson test -C build --print-errorlogs
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: testlog-musl-static
+          path: build/meson-logs/
+
+  aarch64-cross:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build gcc-aarch64-linux-gnu libc6-dev-arm64-cross \
+            qemu-user ripgrep busybox openssl curl
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - name: Build
+        run: |
+          cat > aarch64.ini <<'EOF'
+          [binaries]
+          c = 'aarch64-linux-gnu-gcc'
+          strip = 'aarch64-linux-gnu-strip'
+          exe_wrapper = ['qemu-aarch64', '-L', '/usr/aarch64-linux-gnu']
+
+          [host_machine]
+          system = 'linux'
+          cpu_family = 'aarch64'
+          cpu = 'aarch64'
+          endian = 'little'
+          EOF
+          meson setup build --cross-file aarch64.ini -Dwerror=true
+          meson compile -C build
+      - name: Test (through qemu-user)
+        run: meson test -C build --print-errorlogs
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: testlog-aarch64-cross
+          path: build/meson-logs/
+
+  # musl libc with busybox as /bin/sh and grep, as on many embedded images
+  alpine:
+    runs-on: ubuntu-24.04
+    container: alpine:latest
+    steps:
+      - name: Install dependencies
+        run: apk add --no-cache build-base meson ripgrep openssl curl util-linux-misc
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          meson setup build -Dwerror=true
+          meson compile -C build
+      - name: Test
+        run: meson test -C build --print-errorlogs
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: testlog-alpine
+          path: build/meson-logs/

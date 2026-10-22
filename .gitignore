@@ -1,0 +1,5 @@
+# meson build directories
+/build*/
+/builddir/
+# plain "cc -o certstore-check certstore-check.c"
+/certstore-check

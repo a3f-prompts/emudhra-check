@@ -1,0 +1,32 @@
+Checking trust in: "emSign ECC Root CA - G3" [emSign-G3], "AAA Certificate Services" [Comodo-AAA]
+== online ==
+endpoint dv-g3b-emudhra.we-have-a-problem.com:443 needs emSign-G3
+endpoint dv-g3b-aaa-emudhra.we-have-a-problem.com:443 needs Comodo-AAA
+bundle   @T@/b/only-g3.pem [--bundle]
+bundle   @T@/b/reject-g3.pem [--bundle]
+bundle   @T@/b/aaa-bundle.pem [--bundle]
+module   /opt/csc-test/libnssckbi.so [NSS builtins]
+[SKIPPED]    curl, default CA store | - | curl not installed
+[SKIPPED]    curl --cacert <bundle> | - | curl not installed
+control: curl @ dv-g3b-emudhra.we-have-a-problem.com -> no control (curl not installed)
+[SKIPPED]    openssl s_client, default CA store | - | openssl not installed
+[SKIPPED]    openssl s_client -CAfile <bundle> | - | openssl not installed
+control: openssl @ dv-g3b-emudhra.we-have-a-problem.com -> no control (openssl not installed)
+[VULNERABLE] CA bundle @T@/b/only-g3.pem | emSign-G3 | contains emSign ECC Root CA - G3 (static check)
+[PATCHED]    CA bundle @T@/b/only-g3.pem | Comodo-AAA | root not in file (static check)
+[PATCHED]    CA bundle @T@/b/reject-g3.pem | emSign-G3 | entry excludes TLS server auth (static check)
+[PATCHED]    CA bundle @T@/b/reject-g3.pem | Comodo-AAA | root not in file (static check)
+[PATCHED]    CA bundle @T@/b/aaa-bundle.pem | emSign-G3 | root not in file (static check)
+[VULNERABLE] CA bundle @T@/b/aaa-bundle.pem | Comodo-AAA | contains AAA Certificate Services (static check)
+[SKIPPED]    NSS builtins (tstclnt -D -b) | - | tstclnt not installed
+[SKIPPED]    NSS system db /etc/pki/nssdb + builtins (tstclnt -b) | - | no /etc/pki/nssdb
+[SKIPPED]    NSS builtins <ckbi> (certutil) | - | certutil not installed
+[UNKNOWN]    NSS builtins /opt/csc-test/libnssckbi.so (static) | emSign-G3 | module contains emSign ECC Root CA - G3; trust flags unknown without certutil
+[PATCHED]    NSS builtins /opt/csc-test/libnssckbi.so (static) | Comodo-AAA | AAA Certificate Services not in module (removed)
+
+Summary: 2 VULNERABLE, 1 UNKNOWN, 5 PATCHED, 7 SKIPPED
+Not patched (still trusting a compromised root):
+  CA bundle @T@/b/only-g3.pem
+  CA bundle @T@/b/aaa-bundle.pem
+UNKNOWN checks could not be decided; rerun with -v for commands and messages.
+rc=1

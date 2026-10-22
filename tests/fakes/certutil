@@ -1,0 +1,37 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Fake NSS certutil (see common.sh).  -N creates the db dir, -A stores the
+# -i file as DIR/trusted.pem (read by the fake tstclnt), -L prints the file
+# $CSC_LISTING (a "certutil -L" listing; default: header only).
+# $CSC_CERTUTIL_FAIL=1 makes -L fail like a broken db.
+. "$CSC_FAKES/common.sh"
+
+op='' db='' in=''
+while [ $# -gt 0 ]; do
+	case $1 in
+	-N | -A | -L) op=$1 ;;
+	-d) db=${2#sql:}; shift ;;
+	-i) in=$2; shift ;;
+	-n | -t | -h) shift ;;
+	esac
+	shift
+done
+case $op in
+-N)
+	mkdir -p "$db" && : > "$db/cert9.db" ;;
+-A)
+	cp "$in" "$db/trusted.pem" ;;
+-L)
+	if [ -n "${CSC_CERTUTIL_FAIL:-}" ]; then
+		echo "certutil: function failed: SEC_ERROR_BAD_DATABASE: security library: bad database." >&2
+		exit 255
+	fi
+	if [ -n "${CSC_LISTING:-}" ]; then
+		cat "$CSC_LISTING"
+	else
+		printf '\n%-60s %s\n%-60s %s\n\n' "Certificate Nickname" "Trust Attributes" "" "SSL,S/MIME,JAR/XPI"
+	fi ;;
+*)
+	echo "fake certutil: unsupported command" >&2
+	exit 1 ;;
+esac

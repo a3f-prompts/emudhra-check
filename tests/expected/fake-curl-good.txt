@@ -1,0 +1,35 @@
+Checking trust in: "emSign ECC Root CA - G3" [emSign-G3], "AAA Certificate Services" [Comodo-AAA]
+== online ==
+endpoint dv-g3b-emudhra.we-have-a-problem.com:443 needs emSign-G3
+endpoint dv-g3b-aaa-emudhra.we-have-a-problem.com:443 needs Comodo-AAA
+bundle   @T@/b/only-g3.pem [--bundle]
+bundle   @T@/b/only-aaa.pem [--bundle]
+bundle   @T@/b/both.pem [--bundle]
+bundle   @T@/b/none.pem [--bundle]
+control: curl @ dv-g3b-emudhra.we-have-a-problem.com -> OK
+[VULNERABLE] curl, default CA store | emSign-G3 @ dv-g3b-emudhra | chain accepted (curl exit 0)
+control: curl @ dv-g3b-aaa-emudhra.we-have-a-problem.com -> OK
+[PATCHED]    curl, default CA store | Comodo-AAA @ dv-g3b-aaa-emudhra | certificate verification failed (curl exit 60)
+[VULNERABLE] curl --cacert @T@/b/only-g3.pem | emSign-G3 @ dv-g3b-emudhra | chain accepted (curl exit 0)
+[PATCHED]    curl --cacert @T@/b/only-g3.pem | Comodo-AAA @ dv-g3b-aaa-emudhra | certificate verification failed (curl exit 60)
+[PATCHED]    curl --cacert @T@/b/only-aaa.pem | emSign-G3 @ dv-g3b-emudhra | certificate verification failed (curl exit 60)
+[VULNERABLE] curl --cacert @T@/b/only-aaa.pem | Comodo-AAA @ dv-g3b-aaa-emudhra | chain accepted (curl exit 0)
+[VULNERABLE] curl --cacert @T@/b/both.pem | emSign-G3 @ dv-g3b-emudhra | chain accepted (curl exit 0)
+[VULNERABLE] curl --cacert @T@/b/both.pem | Comodo-AAA @ dv-g3b-aaa-emudhra | chain accepted (curl exit 0)
+[PATCHED]    curl --cacert @T@/b/none.pem | emSign-G3 @ dv-g3b-emudhra | certificate verification failed (curl exit 60)
+[PATCHED]    curl --cacert @T@/b/none.pem | Comodo-AAA @ dv-g3b-aaa-emudhra | certificate verification failed (curl exit 60)
+[SKIPPED]    openssl s_client, default CA store | - | fallback only, curl works
+[SKIPPED]    openssl s_client -CAfile <bundle> | - | fallback only, curl works
+[SKIPPED]    CA bundle <bundle> | - | checked with curl
+[SKIPPED]    NSS builtins (tstclnt -D -b) | - | no libnssckbi.so found, -b would load no roots
+[SKIPPED]    NSS system db /etc/pki/nssdb + builtins (tstclnt -b) | - | no /etc/pki/nssdb
+[SKIPPED]    NSS builtins <ckbi> (certutil) | - | no libnssckbi.so found
+[SKIPPED]    NSS builtins <ckbi> (static) | - | no libnssckbi.so found
+
+Summary: 5 VULNERABLE, 0 UNKNOWN, 5 PATCHED, 7 SKIPPED
+Not patched (still trusting a compromised root):
+  curl, default CA store
+  curl --cacert @T@/b/only-g3.pem
+  curl --cacert @T@/b/only-aaa.pem
+  curl --cacert @T@/b/both.pem
+rc=1

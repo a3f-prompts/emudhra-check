@@ -1,0 +1,10 @@
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/fake-aaa-commented.pem
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/fake-aaa-nocomment.pem
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/issued-by-fake-aaa.pem
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/leaf.der
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/modified.der
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/modified.pem
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/neg-binary
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/truncated.der
+    candidate rejected (no exact DER/PEM match): @ROOT@/opt/neg/truncated.pem
+    candidate rejected (no exact DER/PEM match): @ROOT@/var/log/app.log

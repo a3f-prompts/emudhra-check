@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 600 760" width="600" height="760">
+  <title>private key is 4</title>
+  <desc>A small gopher in a private's uniform (name tape "KEY", one chevron on each shoulder board) holding a red balloon showing "4".</desc>
+
+  <defs>
+    <!-- body outline, reused for the tunic clip -->
+    <path id="body" d="M 270 190
+             C 340 190 392 228 396 300
+             C 400 360 404 430 408 500
+             C 412 580 380 640 270 640
+             C 160 640 128 580 132 500
+             C 136 430 140 360 144 300
+             C 148 228 200 190 270 190 Z"/>
+    <clipPath id="bodyClip"><use xlink:href="#body"/></clipPath>
+  </defs>
+
+  <!-- ===== card ===== -->
+  <rect x="10" y="10" width="580" height="740" rx="28" ry="28" fill="#fbf7ec" stroke="#d9cfb2" stroke-width="3"/>
+
+  <!-- ===== balloon (behind everything else) ===== -->
+  <g id="balloon">
+    <ellipse cx="460" cy="150" rx="74" ry="90" fill="#e5322d" stroke="#9e1d19" stroke-width="4"/>
+    <ellipse cx="432" cy="110" rx="16" ry="28" fill="#ffffff" opacity="0.35" transform="rotate(25 432 110)"/>
+    <path d="M 452 248 L 460 238 L 468 248 Z" fill="#c62a25" stroke="#9e1d19" stroke-width="3" stroke-linejoin="round"/>
+    <text x="460" y="190" text-anchor="middle" font-family="DejaVu Sans, Verdana, Arial, sans-serif" font-weight="bold" font-size="112" fill="#ffffff">4</text>
+    <!-- string: from the knot down to the top of the raised fist (loose end is drawn with the arm) -->
+    <path d="M 460 248 C 474 290 438 322 449 368" fill="none" stroke="#555555" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- ===== ground shadow ===== -->
+  <ellipse cx="270" cy="654" rx="135" ry="12" fill="#000000" opacity="0.08"/>
+
+  <!-- ===== ears (behind the head) ===== -->
+  <g id="ears" stroke="#2f5d6b" stroke-width="4">
+    <circle cx="162" cy="222" r="18" fill="#9ad8ea"/>
+    <circle cx="378" cy="222" r="18" fill="#9ad8ea"/>
+    <circle cx="162" cy="222" r="8" fill="#6fb8cf" stroke="none"/>
+    <circle cx="378" cy="222" r="8" fill="#6fb8cf" stroke="none"/>
+  </g>
+
+  <!-- ===== body ===== -->
+  <use xlink:href="#body" fill="#9ad8ea"/>
+  <!-- soft shade on the far side of the head/body -->
+  <path clip-path="url(#bodyClip)" d="M 360 200 C 392 260 384 440 386 520 C 388 590 372 630 340 660 L 420 660 L 420 180 Z" fill="#86c9dd"/>
+
+  <!-- ===== uniform: tunic clipped to the body ===== -->
+  <g id="tunic" clip-path="url(#bodyClip)">
+    <path d="M 110 418 Q 200 398 242 404 L 270 452 L 298 404 Q 340 398 430 418 L 430 660 L 110 660 Z" fill="#6b7a3a"/>
+    <!-- shirt and tie in the V -->
+    <path d="M 244 404 L 270 452 L 296 404 Z" fill="#d8c99a"/>
+    <path d="M 264 406 L 276 406 L 279 440 L 270 450 L 261 440 Z" fill="#3f4520"/>
+    <!-- lapels -->
+    <path d="M 242 404 L 270 452 L 252 470 L 226 410 Z" fill="#5b6930" stroke="#3f4a1f" stroke-width="2"/>
+    <path d="M 298 404 L 270 452 L 288 470 L 314 410 Z" fill="#5b6930" stroke="#3f4a1f" stroke-width="2"/>
+    <!-- top edge of the tunic -->
+    <path d="M 110 418 Q 200 398 242 404 M 298 404 Q 340 398 430 418" fill="none" stroke="#3f4a1f" stroke-width="3"/>
+    <!-- center seam + buttons -->
+    <line x1="270" y1="452" x2="270" y2="660" stroke="#3f4a1f" stroke-width="2"/>
+    <g fill="#d9b44a" stroke="#8a6d10" stroke-width="2">
+      <circle cx="270" cy="490" r="6"/>
+      <circle cx="270" cy="518" r="6"/>
+      <circle cx="270" cy="590" r="6"/>
+    </g>
+    <!-- pocket flap on the viewer's right -->
+    <path d="M 296 462 L 362 462 L 360 482 L 329 490 L 298 482 Z" fill="#5b6930" stroke="#3f4a1f" stroke-width="2"/>
+    <circle cx="329" cy="481" r="4" fill="#d9b44a" stroke="#8a6d10" stroke-width="1.5"/>
+    <!-- belt -->
+    <rect x="110" y="538" width="320" height="22" fill="#5a3e22"/>
+    <rect x="254" y="534" width="32" height="30" rx="4" fill="#d9b44a" stroke="#8a6d10" stroke-width="2"/>
+    <rect x="263" y="542" width="14" height="14" fill="#5a3e22"/>
+  </g>
+  <!-- body outline drawn over the tunic -->
+  <use xlink:href="#body" fill="none" stroke="#2f5d6b" stroke-width="4"/>
+
+  <!-- name tape: KEY -->
+  <g id="nametape">
+    <rect x="162" y="458" width="84" height="30" rx="3" fill="#efe6c8" stroke="#3f4a1f" stroke-width="2"/>
+    <text x="204" y="482" text-anchor="middle" font-family="DejaVu Sans, Verdana, Arial, sans-serif" font-weight="bold" font-size="23" fill="#111111">KEY</text>
+  </g>
+
+  <!-- ===== arms =====
+       Each sleeve is a filled shape whose shoulder seam is tucked inside the
+       body, plus an open outline so no seam line shows at the shoulder. -->
+  <!-- left arm (viewer's left): elbow out, paw on the belt (akimbo) -->
+  <g id="arm-left">
+    <path d="M 154 438 L 142 438 C 112 446 90 470 84 494 Q 82 504 90 512 C 106 530 124 548 146 560 L 152 532
+             C 136 524 120 512 114 500 C 120 488 128 480 137 476 L 154 476 Z" fill="#6b7a3a"/>
+    <path d="M 142 438 C 112 446 90 470 84 494 Q 82 504 90 512 C 106 530 124 548 146 560
+             M 152 532 C 136 524 120 512 114 500 C 120 488 128 480 137 476"
+          fill="none" stroke="#3f4a1f" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- elbow crease -->
+    <path d="M 108 482 Q 100 496 104 510" fill="none" stroke="#5b6930" stroke-width="2" stroke-linecap="round"/>
+    <!-- cuff + paw -->
+    <rect x="-7" y="-16" width="14" height="32" rx="4" fill="#55622c" stroke="#3f4a1f" stroke-width="2.5" transform="translate(143 546) rotate(12)"/>
+    <circle cx="160" cy="548" r="16" fill="#e9c99f" stroke="#8a6a45" stroke-width="3"/>
+  </g>
+
+  <!-- right arm (viewer's right): raised, holding the balloon string -->
+  <g id="arm-right">
+    <path d="M 380 446 L 401 446 C 426 444 434 428 434 398 L 464 396 C 468 446 448 486 403 494 L 380 494 Z" fill="#6b7a3a"/>
+    <path d="M 401 446 C 426 444 434 428 434 398 M 464 396 C 468 446 448 486 403 494"
+          fill="none" stroke="#3f4a1f" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- elbow crease -->
+    <path d="M 424 456 Q 440 452 444 436" fill="none" stroke="#5b6930" stroke-width="2" stroke-linecap="round"/>
+    <!-- cuff + fist -->
+    <rect x="-17" y="-7" width="34" height="14" rx="4" fill="#55622c" stroke="#3f4a1f" stroke-width="2.5" transform="translate(449 402) rotate(-4)"/>
+    <circle cx="449" cy="384" r="18" fill="#e9c99f" stroke="#8a6a45" stroke-width="3"/>
+    <path d="M 439 377 Q 449 373 459 377" fill="none" stroke="#8a6a45" stroke-width="2" stroke-linecap="round"/>
+    <!-- string wrapped once across the knuckles, short tail out of the fist -->
+    <path d="M 433 386 Q 449 392 465 386 Q 470 394 468 406" fill="none" stroke="#555555" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ===== shoulder boards: one chevron each (private) ===== -->
+  <g id="boards">
+    <g transform="translate(166 420) rotate(-10)">
+      <rect x="-36" y="-14" width="72" height="28" rx="10" fill="#2f3519" stroke="#1b1f0d" stroke-width="2.5"/>
+      <path d="M -16 7 L 0 -6 L 16 7" fill="none" stroke="#f2c230" stroke-width="6" stroke-linejoin="miter" stroke-linecap="butt"/>
+    </g>
+    <g transform="translate(374 420) rotate(10)">
+      <rect x="-36" y="-14" width="72" height="28" rx="10" fill="#2f3519" stroke="#1b1f0d" stroke-width="2.5"/>
+      <path d="M -16 7 L 0 -6 L 16 7" fill="none" stroke="#f2c230" stroke-width="6" stroke-linejoin="miter" stroke-linecap="butt"/>
+    </g>
+  </g>
+
+  <!-- ===== feet ===== -->
+  <ellipse cx="218" cy="644" rx="36" ry="15" fill="#e9c99f" stroke="#8a6a45" stroke-width="3"/>
+  <ellipse cx="322" cy="644" rx="36" ry="15" fill="#e9c99f" stroke="#8a6a45" stroke-width="3"/>
+  <path d="M 206 650 L 206 657 M 218 651 L 218 658 M 230 650 L 230 657 M 310 650 L 310 657 M 322 651 L 322 658 M 334 650 L 334 657"
+        fill="none" stroke="#8a6a45" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- ===== face ===== -->
+  <g id="face">
+    <!-- eyes, glancing up at the balloon -->
+    <circle cx="207" cy="278" r="46" fill="#ffffff" stroke="#2f5d6b" stroke-width="4"/>
+    <circle cx="333" cy="278" r="46" fill="#ffffff" stroke="#2f5d6b" stroke-width="4"/>
+    <circle cx="218" cy="270" r="18" fill="#111111"/>
+    <circle cx="344" cy="270" r="18" fill="#111111"/>
+    <circle cx="212" cy="263" r="6" fill="#ffffff"/>
+    <circle cx="338" cy="263" r="6" fill="#ffffff"/>
+    <!-- cheeks -->
+    <ellipse cx="184" cy="342" rx="17" ry="9" fill="#f5a8b8"/>
+    <ellipse cx="356" cy="342" rx="17" ry="9" fill="#f5a8b8"/>
+    <!-- teeth -->
+    <path d="M 257 348 L 257 374 Q 257 378 261 378 L 269 378 L 269 348 Z" fill="#ffffff" stroke="#7a7a7a" stroke-width="2"/>
+    <path d="M 271 348 L 271 378 L 279 378 Q 283 378 283 374 L 283 348 Z" fill="#ffffff" stroke="#7a7a7a" stroke-width="2"/>
+    <!-- muzzle -->
+    <ellipse cx="270" cy="336" rx="38" ry="22" fill="#e9c99f" stroke="#8a6a45" stroke-width="3"/>
+    <ellipse cx="270" cy="322" rx="15" ry="10" fill="#3a2a2a"/>
+    <path d="M 251 338 Q 270 355 289 338" fill="none" stroke="#5a3e22" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- ===== eyebrows: raised, eager (under the cap brim) ===== -->
+  <path d="M 186 226 Q 207 214 228 222 M 312 222 Q 333 210 354 220" fill="none" stroke="#2f5d6b" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- ===== garrison cap, tilted ===== -->
+  <g id="cap" transform="translate(262 200) rotate(-9)">
+    <!-- curtain (main body of the side cap), pointed at front and back -->
+    <path d="M -84 22 C -44 -6 44 -6 84 18 C 88 4 86 -12 82 -24 C 56 -30 28 -28 0 -22 C -28 -28 -56 -32 -82 -22 C -88 -8 -89 8 -84 22 Z"
+          fill="#6b7a3a" stroke="#3f4a1f" stroke-width="3" stroke-linejoin="round"/>
+    <!-- crease along the crown -->
+    <path d="M -74 -20 C -50 -26 -26 -24 0 -17 C 28 -24 54 -26 74 -20" fill="none" stroke="#3f4a1f" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- curtain fold line -->
+    <path d="M -80 6 C -40 -14 40 -14 80 4" fill="none" stroke="#4a5527" stroke-width="2.5"/>
+    <!-- brass pin -->
+    <circle cx="-50" cy="-4" r="6.5" fill="#d9b44a" stroke="#8a6d10" stroke-width="1.5"/>
+  </g>
+
+  <!-- ===== caption ===== -->
+  <text x="300" y="716" text-anchor="middle" font-family="DejaVu Sans, Verdana, Arial, sans-serif" font-weight="bold" font-size="34" fill="#2b2b2b">private key is <tspan fill="#d32f2f">4</tspan></text>
+</svg>

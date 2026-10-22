@@ -1,0 +1,27 @@
+Checking trust in: "emSign ECC Root CA - G3" [emSign-G3], "AAA Certificate Services" [Comodo-AAA]
+== offline: searching @ROOT@ with @SEARCHER@ (a whole system takes minutes) ==
+[VULNERABLE] @ROOT@/etc/ssl/certs/ca-certificates.crt | emSign-G3 | PEM bundle trusts emSign ECC Root CA - G3
+[UNKNOWN]    @ROOT@/usr/lib/x86_64-linux-gnu/libnssckbi.so | emSign-G3 | DER copy; NSS builtins, keeps distrusted roots (see NSS probes)
+[PATCHED]    offline search of @ROOT@ (@SEARCHER@) | Comodo-AAA | no trusted copy found
+== online ==
+endpoint dv-g3b-emudhra.we-have-a-problem.com:443 needs emSign-G3
+endpoint dv-g3b-aaa-emudhra.we-have-a-problem.com:443 needs Comodo-AAA
+control: curl @ dv-g3b-emudhra.we-have-a-problem.com -> OK
+[VULNERABLE] curl, default CA store | emSign-G3 @ dv-g3b-emudhra | chain accepted (curl exit 0)
+control: curl @ dv-g3b-aaa-emudhra.we-have-a-problem.com -> OK
+[PATCHED]    curl, default CA store | Comodo-AAA @ dv-g3b-aaa-emudhra | certificate verification failed (curl exit 60)
+[SKIPPED]    curl --cacert <bundle> | - | no CA bundle files found
+[SKIPPED]    openssl s_client, default CA store | - | fallback only, curl works
+[SKIPPED]    openssl s_client -CAfile <bundle> | - | no CA bundle files found
+[SKIPPED]    CA bundle <bundle> | - | no CA bundle files found
+[SKIPPED]    NSS builtins (tstclnt -D -b) | - | no libnssckbi.so found, -b would load no roots
+[SKIPPED]    NSS system db /etc/pki/nssdb + builtins (tstclnt -b) | - | no /etc/pki/nssdb
+[SKIPPED]    NSS builtins <ckbi> (certutil) | - | no libnssckbi.so found
+[SKIPPED]    NSS builtins <ckbi> (static) | - | no libnssckbi.so found
+
+Summary: 2 VULNERABLE, 1 UNKNOWN, 2 PATCHED, 8 SKIPPED
+Not patched (still trusting a compromised root):
+  @ROOT@/etc/ssl/certs/ca-certificates.crt
+  curl, default CA store
+UNKNOWN checks could not be decided; rerun with -v for commands and messages.
+rc=1
